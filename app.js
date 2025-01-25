@@ -10,7 +10,7 @@ let vel = 0;
 
 // Loaders
 function preload() {
-  redX = loadImage('/static/textures/x.png');
+  redX = loadImage('./static/textures/x.png');
 }
 
 /**
