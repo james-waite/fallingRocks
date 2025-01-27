@@ -5,14 +5,29 @@ const sizes = {
 };
 
 // Initial Variables
-let redX, deadPixel;
+// let redX, deadPixel, sound;
+const impactPlane = 200;
+let iconImages = [];
+let crackImages = [];
 let icons = [];
 let cracks = [];
+let sounds = [];
 
 // Loaders
 function preload() {
-  redX = loadImage('./static/textures/x.png');
-  deadPixel = loadImage('./static/textures/deadPixel.png');
+  // redX = loadImage('./static/textures/x.png');
+  // deadPixel = loadImage('./static/textures/deadPixel.png');
+  // sound = loadSound('./static/audio/_01_rock.wav');
+
+  for (let i = 0; i < 4; i++) {
+    iconImages[i] = loadImage('./static/textures/icon_' + i + '.png');
+  }
+  for (let i = 0; i < 2; i++) {
+    crackImages[i] = loadImage('./static/textures/dp_' + i + '.png');
+  }
+  for (let i = 0; i < 7; i++) {
+    sounds[i] = loadSound('./static/audio/_0' + i + '_rock.wav');
+  }
 }
 
 /**
@@ -24,19 +39,19 @@ function setup() {
   createCanvas(sizes.width, sizes.height, WEBGL, myCanvas);
 
   // temp icons for loop
-  for (let i = 0; i < 5; i += 1) {
-    let x = random(-sizes.width / 4, sizes.width / 4);
-    let y = random(-sizes.height / 4, sizes.height / 4);
-    let z = -1000 - Math.floor(random(100, 500));
-    let size = random(40, 60);
-    let img = redX;
-    let vel = 5;
-    // Create a new Icon object
-    let icon = new Icon(x, y, z, size, img, vel);
+  // for (let i = 0; i < 5; i += 1) {
+  //   let x = random(-sizes.width / 3, sizes.width / 3);
+  //   let y = random(-sizes.height / 3, sizes.height / 3);
+  //   let z = -1000 - Math.floor(random(100, 500));
+  //   let size = random(40, 60);
+  //   let img = iconImages[3];
+  //   let vel = 5;
+  //   // Create a new Icon object
+  //   let icon = new Icon(x, y, z, size, img, vel);
 
-    // Add Icon to Icons array
-    icons.push(icon);
-  }
+  //   // Add Icon to Icons array
+  //   icons.push(icon);
+  // }
   // console.log({ ...icons });
 
   // Scene settings
@@ -66,7 +81,7 @@ function draw() {
   let camX = random(-1, 1);
   let camY = random(-1, 1);
   let camZ = random(-1, 1);
-  camera(camX, camY, camZ + height / 2 / tan(PI / 6), 0, 0, 0);
+  camera(camX, camY, camZ + height / 2 / tan(PI / 6), camY, camZ, camX);
 
   /**
    * Lights
@@ -92,11 +107,11 @@ function draw() {
 (function loop() {
   let rand = Math.round(Math.random() * (2000 - 150)) + 150;
   setTimeout(function () {
-    let x = random(-sizes.width / 4, sizes.width / 4);
-    let y = random(-sizes.height / 4, sizes.height / 4);
+    let x = random(-sizes.width / 3, sizes.width / 3);
+    let y = random(-sizes.height / 3, sizes.height / 3);
     let z = -2000 - Math.floor(random(100, 500));
     let size = random(40, 60);
-    let img = redX;
+    let img = iconImages[Math.floor(Math.random() * iconImages.length)];
     let vel = Math.floor(5, 8);
 
     // Create a new Icon object
@@ -131,23 +146,34 @@ class Icon {
   }
   checkImpact() {
     // method for when icon passes threshold
-    if (this.z >= 180) {
+    if (this.z >= impactPlane) {
       // instance of class removes itself from icons array...
       // console.log({ ...icons });
       let iconIndex = icons.indexOf(this);
-      this.placeCrack();
+      if (Math.random() < 0.2) {
+        this.placeCrack();
+      }
       icons.splice(iconIndex, 1);
     }
   }
-  playSound() {
-    // method for selecting and playing impact noise
-  }
   placeCrack() {
     // method for creating a crack at this.x, this.y; w/ probability
-    if (Math.random() < 0.2) {
-      let crack = new Crack(deadPixel, this.x, this.y, 180, this.size);
-      cracks.push(crack);
-    }
+    let crack = new Crack(
+      crackImages[Math.floor(Math.random() * crackImages.length)],
+      this.x,
+      this.y,
+      impactPlane,
+      this.size
+    );
+    cracks.push(crack);
+    this.playSound();
+  }
+  playSound() {
+    // method for selecting and playing impact noise
+    let sound = Math.floor(Math.random() * sounds.length);
+    console.log(sound);
+    sounds[sound].setVolume(0.5);
+    sounds[sound].play();
   }
 }
 
