@@ -55,7 +55,9 @@ function setup() {
   // Scene settings
   noFill();
   noStroke();
+  // angleMode(DEGREES);
 }
+// END SETUP
 
 /**
  * Draw
@@ -67,11 +69,11 @@ function draw() {
   /**
    * Orbit controls
    */
-  let orbitOptions = {
-    disableTouchActions: false,
-    freeRotation: true,
-  };
-  orbitControl(2, 2, 2, orbitOptions);
+  // let orbitOptions = {
+  //   disableTouchActions: false,
+  //   freeRotation: true,
+  // };
+  // orbitControl(2, 2, 2, orbitOptions);
 
   /**
    * Camera
@@ -98,6 +100,7 @@ function draw() {
     cracks[i].show();
   }
 }
+// END DRAW
 
 /**
  * Create new icons timer
@@ -110,7 +113,7 @@ function draw() {
     let z = -2000 - Math.floor(random(100, 500));
     let size = random(40, 60);
     let img = iconImages[Math.floor(Math.random() * iconImages.length)];
-    let vel = Math.floor(5, 8);
+    let vel = Math.floor(5);
 
     // Create a new Icon object
     let icon = new Icon(x, y, z, size, img, vel);
@@ -139,7 +142,8 @@ class Icon {
     texture(this.img);
     translate(this.x, this.y, this.z);
     plane(this.size);
-    this.z = this.z + this.vel;
+    this.z += this.vel;
+    this.vel++;
     pop();
   }
   checkImpact() {
@@ -152,6 +156,7 @@ class Icon {
         this.placeCrack();
       }
       icons.splice(iconIndex, 1);
+      this.playSound();
     }
   }
   placeCrack() {
@@ -161,10 +166,10 @@ class Icon {
       this.x,
       this.y,
       impactPlane,
-      this.size
+      this.size,
+      2 * PI * random()
     );
     cracks.push(crack);
-    this.playSound();
   }
   playSound() {
     // method for selecting and playing impact noise
@@ -178,17 +183,19 @@ class Icon {
  * Cracks class
  */
 class Crack {
-  constructor(url, x, y, z, s) {
+  constructor(url, x, y, z, s, r) {
     this.url = url;
     this.x = x;
     this.y = y;
     this.z = z;
     this.s = s;
+    this.r = r;
   }
   show() {
     push();
     texture(this.url);
     translate(this.x, this.y, this.z);
+    rotate(this.r);
     plane(this.size);
     pop();
   }
