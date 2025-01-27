@@ -5,7 +5,6 @@ const sizes = {
 };
 
 // Initial Variables
-// let redX, deadPixel, sound;
 const impactPlane = 200;
 let iconImages = [];
 let crackImages = [];
@@ -15,10 +14,6 @@ let sounds = [];
 
 // Loaders
 function preload() {
-  // redX = loadImage('./static/textures/x.png');
-  // deadPixel = loadImage('./static/textures/deadPixel.png');
-  // sound = loadSound('./static/audio/_01_rock.wav');
-
   for (let i = 0; i < 4; i++) {
     iconImages[i] = loadImage('./static/textures/icon_' + i + '.png');
   }
@@ -38,21 +33,24 @@ function setup() {
   const myCanvas = document.querySelector('canvas.webgl');
   createCanvas(sizes.width, sizes.height, WEBGL, myCanvas);
 
-  // temp icons for loop
-  // for (let i = 0; i < 5; i += 1) {
-  //   let x = random(-sizes.width / 3, sizes.width / 3);
-  //   let y = random(-sizes.height / 3, sizes.height / 3);
-  //   let z = -1000 - Math.floor(random(100, 500));
-  //   let size = random(40, 60);
-  //   let img = iconImages[3];
-  //   let vel = 5;
-  //   // Create a new Icon object
-  //   let icon = new Icon(x, y, z, size, img, vel);
-
-  //   // Add Icon to Icons array
-  //   icons.push(icon);
-  // }
-  // console.log({ ...icons });
+  // Get current date
+  const startDay = 26;
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  // const mm = String(today.getMonth() + 1).padStart(2, '0');
+  // const yyyy = today.getFullYear();
+  const dayDiff = dd - startDay;
+  // Pre-propogate w/ cracks based on day
+  for (let i = 0; i < dayDiff * 2; i++) {
+    let crack = new Crack(
+      crackImages[Math.floor(Math.random() * crackImages.length)],
+      random(-sizes.width / 3, sizes.width / 3),
+      random(-sizes.height / 3, sizes.height / 3),
+      impactPlane,
+      random(40, 60)
+    );
+    cracks.push(crack);
+  }
 
   // Scene settings
   noFill();
@@ -171,7 +169,6 @@ class Icon {
   playSound() {
     // method for selecting and playing impact noise
     let sound = Math.floor(Math.random() * sounds.length);
-    console.log(sound);
     sounds[sound].setVolume(0.5);
     sounds[sound].play();
   }
