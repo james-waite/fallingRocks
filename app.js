@@ -6,6 +6,8 @@ const sizes = {
 
 // Initial Variables
 const impactPlane = 200;
+const impactProb = 0.2;
+let bgShader;
 let iconImages = [];
 let crackImages = [];
 let icons = [];
@@ -23,6 +25,7 @@ function preload() {
   for (let i = 0; i < 7; i++) {
     sounds[i] = loadSound('./static/audio/_0' + i + '_rock.wav');
   }
+  bgShader = loadShader('./shaders/shader.vert', './shaders/shader.frag');
 }
 
 /**
@@ -44,8 +47,8 @@ function setup() {
   for (let i = 0; i < dayDiff * 2; i++) {
     let crack = new Crack(
       crackImages[Math.floor(Math.random() * crackImages.length)],
-      random(-sizes.width / 3, sizes.width / 3),
-      random(-sizes.height / 3, sizes.height / 3),
+      random(-sizes.width / 2, sizes.width / 2),
+      random(-sizes.height / 2, sizes.height / 2),
       impactPlane,
       random(40, 60)
     );
@@ -55,7 +58,6 @@ function setup() {
   // Scene settings
   noFill();
   noStroke();
-  // angleMode(DEGREES);
 }
 // END SETUP
 
@@ -64,16 +66,7 @@ function setup() {
  */
 function draw() {
   // Scene settings
-  background(205);
-
-  /**
-   * Orbit controls
-   */
-  // let orbitOptions = {
-  //   disableTouchActions: false,
-  //   freeRotation: true,
-  // };
-  // orbitControl(2, 2, 2, orbitOptions);
+  background(155);
 
   /**
    * Camera
@@ -87,6 +80,17 @@ function draw() {
    * Lights
    */
   // ambientLight(255);
+
+  /**
+   * Shader
+   */
+  // bgShader.setUniform('millis', millis());
+  push();
+  // texture(iconImages[0]);
+  shader(bgShader);
+  translate(0, 0, -2500);
+  plane(sizes.width * 4, sizes.height * 4);
+  pop();
 
   /**
    * Icons loop
@@ -141,6 +145,9 @@ class Icon {
     push();
     texture(this.img);
     translate(this.x, this.y, this.z);
+    // rotateY(frameCount * 0.01);
+    rotateX(frameCount * 0.01);
+    rotateZ(frameCount * 0.01);
     plane(this.size);
     this.z += this.vel;
     this.vel++;
@@ -151,7 +158,7 @@ class Icon {
     if (this.z >= impactPlane) {
       // console.log({ ...icons });
       let iconIndex = icons.indexOf(this);
-      if (Math.random() < 0.2) {
+      if (Math.random() < impactProb) {
         this.placeCrack();
       }
       // instance of class removes itself from icons array...
