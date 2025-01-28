@@ -149,12 +149,12 @@ class Icon {
   checkImpact() {
     // method for when icon passes threshold
     if (this.z >= impactPlane) {
-      // instance of class removes itself from icons array...
       // console.log({ ...icons });
       let iconIndex = icons.indexOf(this);
       if (Math.random() < 0.2) {
         this.placeCrack();
       }
+      // instance of class removes itself from icons array...
       icons.splice(iconIndex, 1);
       this.playSound();
     }
