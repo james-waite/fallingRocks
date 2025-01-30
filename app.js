@@ -17,13 +17,13 @@ let sounds = [];
 // Loaders
 function preload() {
   for (let i = 0; i < 4; i++) {
-    iconImages[i] = loadImage('./static/textures/icon_' + i + '.png');
+    iconImages[i] = loadImage('/static/textures/icon_' + i + '.png');
   }
   for (let i = 0; i < 2; i++) {
-    crackImages[i] = loadImage('./static/textures/dp_' + i + '.png');
+    crackImages[i] = loadImage('/static/textures/dp_' + i + '.png');
   }
   for (let i = 0; i < 7; i++) {
-    sounds[i] = loadSound('./static/audio/' + i + '.mp3');
+    sounds[i] = loadSound('/static/audio/' + i + '.mp3');
   }
   bgShader = loadShader('./shaders/shader.vert', './shaders/shader.frag');
 }
