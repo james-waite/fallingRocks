@@ -23,7 +23,7 @@ function preload() {
     crackImages[i] = loadImage('./static/textures/dp_' + i + '.png');
   }
   for (let i = 0; i < 7; i++) {
-    sounds[i] = loadSound('./static/audio/_0' + i + '_rock.wav');
+    sounds[i] = loadSound('./static/audio/' + i + '.mp3');
   }
   bgShader = loadShader('./shaders/shader.vert', './shaders/shader.frag');
 }
@@ -181,7 +181,7 @@ class Icon {
   playSound() {
     // method for selecting and playing impact noise
     let sound = Math.floor(Math.random() * sounds.length);
-    sounds[sound].setVolume(0.5);
+    sounds[sound].setVolume(1.0);
     sounds[sound].play();
   }
 }
