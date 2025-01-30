@@ -7,7 +7,7 @@ const sizes = {
 // Initial Variables
 const impactPlane = 200;
 const impactProb = 0.2;
-let bgShader;
+// let bgShader;
 let iconImages = [];
 let crackImages = [];
 let icons = [];
@@ -17,15 +17,15 @@ let sounds = [];
 // Loaders
 function preload() {
   for (let i = 0; i < 4; i++) {
-    iconImages[i] = loadImage('/static/textures/icon_' + i + '.png');
+    iconImages[i] = loadImage('./static/textures/icon_' + i + '.png');
   }
   for (let i = 0; i < 2; i++) {
-    crackImages[i] = loadImage('/static/textures/dp_' + i + '.png');
+    crackImages[i] = loadImage('./static/textures/dp_' + i + '.png');
   }
-  for (let i = 0; i < 7; i++) {
-    sounds[i] = loadSound('/static/audio/' + i + '.mp3');
+  for (let i = 0; i < 168; i++) {
+    sounds[i] = loadSound('./static/audio/' + i + '.mp3');
   }
-  bgShader = loadShader('./shaders/shader.vert', './shaders/shader.frag');
+  //   bgShader = loadShader('./shaders/shader.vert', './shaders/shader.frag');
 }
 
 /**
@@ -86,8 +86,8 @@ function draw() {
    */
   // bgShader.setUniform('millis', millis());
   push();
-  // texture(iconImages[0]);
-  shader(bgShader);
+  texture(iconImages[0]);
+  // shader(bgShader);
   translate(0, 0, -2500);
   plane(sizes.width * 4, sizes.height * 4);
   pop();
